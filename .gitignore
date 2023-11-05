@@ -1,0 +1,33 @@
+# Compiled Go binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+pkg/
+
+# Dependency directories
+vendor/
+
+# Output of `go test -c`
+*.test
+
+# Output of `go tool cover`
+*.out
+
+# Temp files and directories
+*.log
+*.pot
+_test/
+tmp/
+*.db
+*.sqlite
+
+# User-specific files
+.idea
+.vscode
+
+# OS-generated files
+.DS_Store
+Thumbs.db

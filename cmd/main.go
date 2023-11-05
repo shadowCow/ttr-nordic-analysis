@@ -67,6 +67,13 @@ func main() {
 	for _, s := range sorted2 {
 		fmt.Printf("%s: %v, %v\n", s.Key, s.Value.Count, s.Value.TotalValue)
 	}
+
+	fmt.Println()
+
+	routesByCity := analysis.RoutesByCity()
+	for k, v := range routesByCity {
+		fmt.Printf("%s: %v\n\n", k, v)
+	}
 }
 
 func countTicketsByCity(tickets []analysis.Ticket) map[analysis.City]int {

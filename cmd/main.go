@@ -8,48 +8,6 @@ import (
 )
 
 func main() {
-	// cities := []City{
-	// 	"Murmansk",
-	// 	"Kirkenes",
-	// 	"Honningsvag",
-	// 	"Tromso",
-	// 	"Narvik",
-	// 	"Kiruna",
-	// 	"Boden",
-	// 	"Tornio",
-	// 	"Rovaniemi",
-	// 	"Oulu",
-	// 	"Kajaani",
-	// 	"Lieksa",
-	// 	"Kuopio",
-	// 	"Imatra",
-	// 	"Helsinki",
-	// 	"Lahti",
-	// 	"Turku",
-	// 	"Tampere",
-	// 	"Vaasa",
-	// 	"Umea",
-	// 	"Sundsvall",
-	// 	"Tallinn",
-	// 	"Stockholm",
-	// 	"Norrkoping",
-	// 	"Karlskrona",
-	// 	"Kobenhavn",
-	// 	"Arhus",
-	// 	"Alborg",
-	// 	"Goteborg",
-	// 	"Oslo",
-	// 	"Orebro",
-	// 	"Kristiansand",
-	// 	"Stavangar",
-	// 	"Bergen",
-	// 	"Andalsnes",
-	// 	"Lillehammer",
-	// 	"Trondheim",
-	// 	"Ostersund",
-	// 	"Moirana",
-	// }
-
 	tickets := analysis.Tickets()
 
 	counts := countTicketsByCity(tickets)

@@ -47,6 +47,52 @@ const (
 	Moirana City = "Moirana"
 )
 
+var cities []City = []City{
+	"Murmansk",
+	"Kirkenes",
+	"Honningsvag",
+	"Tromso",
+	"Narvik",
+	"Kiruna",
+	"Boden",
+	"Tornio",
+	"Rovaniemi",
+	"Oulu",
+	"Kajaani",
+	"Lieksa",
+	"Kuopio",
+	"Imatra",
+	"Helsinki",
+	"Lahti",
+	"Turku",
+	"Tampere",
+	"Vaasa",
+	"Umea",
+	"Sundsvall",
+	"Tallinn",
+	"Stockholm",
+	"Norrkoping",
+	"Karlskrona",
+	"Kobenhavn",
+	"Arhus",
+	"Alborg",
+	"Goteborg",
+	"Oslo",
+	"Orebro",
+	"Kristiansand",
+	"Stavangar",
+	"Bergen",
+	"Andalsnes",
+	"Lillehammer",
+	"Trondheim",
+	"Ostersund",
+	"Moirana",
+}
+
+func ListCities() []City {
+	return cities
+}
+
 type Ticket struct {
 	From City
 	To City

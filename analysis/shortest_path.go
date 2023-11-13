@@ -68,30 +68,80 @@ func dijkstra(g *Graph, start City) (map[City]int, map[City][]City) {
 	distances[start] = 0
 
 	// Priority queue to keep track of the nodes with the shortest distance
-	queue := make([]City, 0)
-	queue = append(queue, start)
+	queue := newSortedQueue()
+	queue.add(start, 0)
 
-	for len(queue) > 0 {
-		current := queue[0]
-		queue = queue[1:]
-		visited[current] = true
+	for queue.length() > 0 {
+		current := queue.takeHead()
+		visited[current.city] = true
 
-		for neighbor, weight := range g.Edges[current] {
+		for neighbor, weight := range g.Edges[current.city] {
 			// Calculate the distance from the start node to the neighbor node
-			newDistance := distances[current] + weight
+			newDistance := distances[current.city] + weight
 
 			// If a shorter path is found, update distances and subpaths
 			if newDistance < distances[neighbor] {
 				distances[neighbor] = newDistance
-				subpaths[neighbor] = append(subpaths[current], neighbor)
+				subpaths[neighbor] = append(subpaths[current.city], neighbor)
 
 				// only push unvisited nodes onto the queue
 				if _, exists := visited[neighbor]; !exists {
-					queue = append(queue, neighbor)
+					queue.add(neighbor, distances[neighbor])
 				}
 			}
 		}
 	}
 
 	return distances, subpaths
+}
+
+type toVisit struct {
+	city City
+	cost int
+}
+type sortedQueue struct {
+	items []toVisit
+}
+func newSortedQueue() sortedQueue {
+	return sortedQueue{
+		items: []toVisit{},
+	}
+}
+func (q *sortedQueue) add(city City, cost int) {
+	if len(q.items) == 0 {
+		q.items = []toVisit{
+			{city, cost},
+		}
+	} else {
+		insertionIndex := len(q.items)
+		for i, item := range q.items {
+			if item.cost > cost {
+				insertionIndex = i
+				break
+			}
+		}
+
+		if insertionIndex == len(q.items) {
+			q.items = append(q.items, toVisit{city, cost})
+		} else {
+			newItems := append([]toVisit{}, q.items[:insertionIndex]...)
+				after := q.items[insertionIndex:]
+				newItems = append(newItems, toVisit{city, cost})
+				newItems = append(newItems, after...)
+				q.items = newItems
+		}
+	}
+}
+func (q *sortedQueue) takeHead() *toVisit {
+	if len(q.items) == 0 {
+		return nil
+	}
+
+	head := q.items[0]
+	q.items = q.items[1:]
+
+	return &head
+}
+func (q *sortedQueue) length() int {
+	return len(q.items)
 }

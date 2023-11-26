@@ -13,7 +13,8 @@ func TestShortestPath(t *testing.T) {
 
 	for _, ticket := range tickets {
 		graph := analysis.NewGraph(analysis.Routes())
-		gotCost, gotPath := graph.ShortestPath(ticket.From, ticket.To)
+		shortestPaths := analysis.NewShortestPaths(graph)
+		gotCost, gotPath := shortestPaths.ShortestPath(ticket.From, ticket.To)
 		wantCost := ticket.Value
 
 		t.Logf("shortestPath %s to %s: %v cost: %d", ticket.From, ticket.To, gotPath, gotCost)

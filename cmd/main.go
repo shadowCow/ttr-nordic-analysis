@@ -32,6 +32,21 @@ func main() {
 	for k, v := range routesByCity {
 		fmt.Printf("%s: %v\n\n", k, v)
 	}
+
+	graph := analysis.NewGraph(analysis.Routes())
+	shortestPaths := analysis.NewShortestPaths(graph)
+	cityOccurencesOnTicketShortestPaths := map[analysis.City]int{}
+	for _, c := range analysis.ListCities() {
+		count := countCityOccurrenceOnTicketShortestPaths(c, tickets, &shortestPaths)
+		cityOccurencesOnTicketShortestPaths[c] = count
+	}
+	sortedOccurrences := sortByValueDescending(cityOccurencesOnTicketShortestPaths)
+	fmt.Println("==============================================")
+	fmt.Println("City Occurrence Count on Ticket Shortest Paths")
+	fmt.Println("==============================================")
+	for _, s := range sortedOccurrences {
+		fmt.Printf("%s: %v\n", s.Key, s.Value)
+	}
 }
 
 func countTicketsByCity(tickets []analysis.Ticket) map[analysis.City]int {
@@ -138,4 +153,23 @@ func sortByValuesDescending(m map[analysis.City]TicketCountValue) []keyValues {
     })
 
 	return keyValueSlice
+}
+
+func countCityOccurrenceOnTicketShortestPaths(
+	city analysis.City,
+	tickets []analysis.Ticket,
+	shortestPaths *analysis.ShortestPaths,
+) int {
+	count := 0
+	for _, ticket := range tickets {
+		_, path := shortestPaths.ShortestPath(ticket.From, ticket.To)
+		fmt.Printf("ticket: %v\npath: %v\n\n", ticket, path)
+		for _, pathCity := range path {
+			if pathCity == city {
+				count += 1
+			}
+		}
+	}
+
+	return count
 }

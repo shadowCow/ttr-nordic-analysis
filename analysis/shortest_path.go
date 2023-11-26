@@ -41,12 +41,49 @@ func (g *Graph) addEdge(src, dest City, weight int) {
 	g.Edges[src][dest] = weight
 }
 
+// store the costs and paths for all shortest paths
+// from any city to any other city
+type ShortestPaths struct {
+	costs map[City]map[City]int
+	paths map[City]map[City][]City
+}
+
+func NewShortestPaths(g *Graph) ShortestPaths {
+	s := ShortestPaths{
+		costs: make(map[City]map[City]int),
+		paths: make(map[City]map[City][]City),
+	}
+	for from := range g.Edges {
+		shortestPathCosts, shortestPaths := dijkstra(g, from)
+		
+		s.costs[from] = shortestPathCosts
+		s.paths[from] = prependFromCity(shortestPaths, from)
+
+		// fmt.Printf("from: %v\nshortestPaths %v\n\n", from, s.paths[from])
+	}
+
+	return s
+}
+
+func prependFromCity(paths map[City][]City, from City) map[City][]City {
+	withPrepends := make(map[City][]City, len(paths))
+	for k, v := range paths {
+		withCity := make([]City, len(v) + 1)
+		withCity[0] = from
+		for i, c := range v {
+			withCity[i+1] = c
+		}
+
+		withPrepends[k] = withCity
+	}
+
+	return withPrepends
+}
+
 // returns the cost of the shortest path
 // and the path through all intermediate cities.
-func (g *Graph) ShortestPath(from, to City) (int, []City) {
-	shortestPathCosts, shortestPaths := dijkstra(g, from)
-
-	return shortestPathCosts[to], shortestPaths[to]
+func (s *ShortestPaths) ShortestPath(from, to City) (int, []City) {
+	return s.costs[from][to], s.paths[from][to]
 }
 
 // returns...

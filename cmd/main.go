@@ -47,6 +47,19 @@ func main() {
 	for _, s := range sortedOccurrences {
 		fmt.Printf("%s: %v\n", s.Key, s.Value)
 	}
+
+	routeOccurrencesOnTicketShortestPaths := map[analysis.Route]int{}
+	for _, r := range analysis.Routes() {
+		count := countRouteOccurrenceOnTicketShortestPaths(r, tickets, &shortestPaths)
+		routeOccurrencesOnTicketShortestPaths[r] = count
+	}
+	sortedRouteOccurrences := sortRoutesByValueDescending(routeOccurrencesOnTicketShortestPaths)
+	fmt.Println("==============================================")
+	fmt.Println("Route Occurrence Count on Ticket Shortest Paths")
+	fmt.Println("==============================================")
+	for _, s := range sortedRouteOccurrences {
+		fmt.Printf("%v: %v\n", s.Key, s.Value)
+	}
 }
 
 func countTicketsByCity(tickets []analysis.Ticket) map[analysis.City]int {
@@ -91,6 +104,27 @@ func sortByValueDescending(m map[analysis.City]int) []keyValue {
     })
 
 	return keyValueSlice
+}
+
+func sortRoutesByValueDescending(m map[analysis.Route]int) []routeKeyValue {
+	// Convert the map to a slice of key-value pairs (struct)
+    var keyValueSlice []routeKeyValue
+
+    for key, value := range m {
+        keyValueSlice = append(keyValueSlice, routeKeyValue{Key: key, Value: value})
+    }
+
+    // Define a custom sorting function for descending order
+    sort.Slice(keyValueSlice, func(i, j int) bool {
+        return keyValueSlice[i].Value > keyValueSlice[j].Value
+    })
+
+	return keyValueSlice
+}
+
+type routeKeyValue struct {
+	Key analysis.Route
+	Value int
 }
 
 
@@ -172,4 +206,36 @@ func countCityOccurrenceOnTicketShortestPaths(
 	}
 
 	return count
+}
+
+func countRouteOccurrenceOnTicketShortestPaths(
+	route analysis.Route,
+	tickets []analysis.Ticket,
+	shortestPaths *analysis.ShortestPaths,
+) int {
+	count := 0
+	for _, ticket := range tickets {
+		_, path := shortestPaths.ShortestPath(ticket.From, ticket.To)
+		// fmt.Printf("ticket: %v\npath: %v\n\n", ticket, path)
+		if pathHasRoute(path, route) {
+			count += 1
+		}
+	}
+
+	return count
+}
+
+func pathHasRoute(path []analysis.City, route analysis.Route) bool {
+	for i, c := range path {
+		if i < len(path) - 1 {
+			from := c
+			to := path[i + 1]
+
+			if from == route.From && to == route.To || from == route.To && to == route.From {
+				return true
+			}
+		}
+	}
+
+	return false
 }

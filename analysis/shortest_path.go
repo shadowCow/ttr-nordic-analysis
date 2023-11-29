@@ -2,6 +2,7 @@ package analysis
 
 import (
 	"math"
+	"slices"
 )
 
 type Graph struct {
@@ -119,7 +120,8 @@ func dijkstra(g *Graph, start City) (map[City]int, map[City][]City) {
 			// If a shorter path is found, update distances and subpaths
 			if newDistance < distances[neighbor] {
 				distances[neighbor] = newDistance
-				subpaths[neighbor] = append(subpaths[current.city], neighbor)
+				subpaths[neighbor] = append([]City{}, subpaths[current.city]...)
+				subpaths[neighbor] = append(subpaths[neighbor], neighbor)
 
 				// only push unvisited nodes onto the queue
 				if _, exists := visited[neighbor]; !exists {
@@ -145,6 +147,12 @@ func newSortedQueue() sortedQueue {
 	}
 }
 func (q *sortedQueue) add(city City, cost int) {
+	if slices.ContainsFunc(q.items, func (e toVisit) bool {
+		return e.city == city
+	}) {
+		return
+	}
+
 	if len(q.items) == 0 {
 		q.items = []toVisit{
 			{city, cost},
